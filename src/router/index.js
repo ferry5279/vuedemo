@@ -26,9 +26,7 @@ const router = new VueRouter({
     mode: 'history',
 })
 router.beforeEach((to, from, next) => {
-    let {
-        fullPath
-    } = to;
+    let { fullPath } = to;
     if (!localStorage.getItem('token') && fullPath !== '/login') {
         next('/login')
     } else {
