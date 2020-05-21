@@ -69,6 +69,7 @@ export default {
                   message: '登录成功',
                   type: 'success'
                 });
+                this.$router.push({path:'/'})
                
               }
             })
@@ -82,8 +83,8 @@ export default {
       this.$refs[formName].resetFields();
     },
     reg () {
-      // this.$route.name('/reg')
-       console.log(this.$route)
+      // console.log(this.$router,this.$router.push('/reg'))
+      this.$router.push({path:'/reg'})
     }
   }
 };
