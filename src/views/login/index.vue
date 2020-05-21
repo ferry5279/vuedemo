@@ -23,12 +23,10 @@
 </template>
 
 <script>
-import axios from 'axios';
-// import { Message } from 'element-ui';
+import { mapState, mapActions } from 'vuex'
 import "./style.less";
 export default {
   data() {
-   
     var validatePass = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入密码"));
@@ -57,24 +55,28 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapState(['Status']),
+  },
+  watch:{
+    Status (){
+      if(this.Status === 200){
+        localStorage.setItem('token',true)
+        this.$message({
+          message: '登录成功',
+          type: 'success'
+        });
+        this.$router.push({path:'/'})
+      }
+    }
+  },
   methods: {
+     ...mapActions(['LOGIN_DATA_ACTION']),
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          axios.post('http://api.baxiaobu.com/index.php/home/v1/login',this.ruleForm.username)
-            .then(res=>{
-              if(res.status === 200){
-                localStorage.setItem('token',true)
-                this.$message({
-                  message: '登录成功',
-                  type: 'success'
-                });
-                this.$router.push({path:'/'})
-               
-              }
-            })
+          this['LOGIN_DATA_ACTION'](this.ruleForm.username)
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
@@ -83,8 +85,7 @@ export default {
       this.$refs[formName].resetFields();
     },
     reg () {
-      // console.log(this.$router,this.$router.push('/reg'))
-      this.$router.push({path:'/reg'})
+      this.$router.push('/regs')
     }
   }
 };

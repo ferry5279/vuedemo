@@ -7,7 +7,6 @@ import store from './store'
 import '@/utils/reset.css'
 Vue.use(ElementUI);
 Vue.config.productionTip = false
-
 new Vue({
     router,
     store,

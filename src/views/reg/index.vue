@@ -24,7 +24,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+// import axios from 'axios';
+import { mapState, mapActions } from 'vuex'
 import "./style.less";
 export default {
   data() {
@@ -56,25 +57,32 @@ export default {
         username: [{ validator: validatePass2, trigger: "blur" }],
       }
     };
+  },computed: {
+    ...mapState(['regStatus']),
+  },
+  watch:{
+    regStatus (){
+      if(Number(this.regStatus) == 200){
+        this.$message({
+          message: '注册成功',
+          type: 'success'
+        });
+        this.$router.push({path:'login'})
+      }else{
+         this.$message({
+          message: '注册失败',
+          type: 'success'
+        });
+      }
+    }
   },
   methods: {
+    ...mapActions(['REG_DATA_ACTION']),
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          axios.post('http://api.baxiaobu.com/index.php/home/v1/register',this.ruleForm)
-            .then(res=>{
-              if(res.status === 200){
-                localStorage.setItem('token',true)
-                this.$message({
-                  message: '注册成功',
-                  type: 'success'
-                });
-                this.$router.push({path:'/login'})
-               
-              }
-            })
+          this['REG_DATA_ACTION'](this.ruleForm)
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
@@ -83,8 +91,7 @@ export default {
       this.$refs[formName].resetFields();
     },
     reg () {
-      // console.log(this.$router,this.$router.push('/reg'))
-      this.$router.push({path:'/reg'})
+      this.$router.resolve({path:'/login'})
     }
   }
 };
